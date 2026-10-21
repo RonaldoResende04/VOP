@@ -11,14 +11,37 @@ peça a correção ali mesmo antes de avançar — empilhar etapas sobre um erro
 
 ---
 
+## Antes de começar — Criar o Supabase e conectar ao Lovable
+
+O backend (banco, login, arquivos e realtime) fica num projeto **Supabase seu**, e não no
+Lovable Cloud. Assim os dados são seus mesmo que um dia você saia do Lovable.
+
+1. Crie uma conta em https://supabase.com e clique em **New project**.
+   - Nome: `vop`
+   - Região: **South America (São Paulo)**
+   - Senha do banco: gere uma senha forte e guarde num gerenciador de senhas
+2. No Lovable, crie o projeto com o prompt da Etapa 0 abaixo. Em seguida, clique em
+   **Supabase** (canto superior direito ou em Integrations), autorize sua conta e
+   escolha o projeto `vop`. **Não ative o Lovable Cloud.**
+3. No painel do Supabase, em **Authentication → Sign In / Providers → Email**,
+   desligue **Confirm email** se não quiser que cada pessoa confirme o email ao se
+   cadastrar. Como os cadastros já são restritos pela lista de emails autorizados, é seguro.
+
+> Plano grátis do Supabase: sobra para 2–5 pessoas, mas o projeto é **pausado após
+> 7 dias sem uso**. Para reativar, basta clicar em "Restore" no painel. Se isso
+> incomodar, o plano Pro custa ~US$ 25/mês.
+
+---
+
 ## Etapa 0 — Criar o projeto (prompt inicial)
 
 ```text
 Crie um app web chamado VOP: um planner colaborativo para uma equipe pequena e fechada
 (2 a 5 pessoas), no estilo ClickUp/Notion. Interface em português do Brasil.
 
-Stack: React + TypeScript + Tailwind + shadcn/ui. Use o Lovable Cloud como backend
-(banco de dados, autenticação e realtime).
+Stack: React + TypeScript + Tailwind + shadcn/ui. O backend é o Supabase que conectei a
+este projeto (banco de dados, autenticação, storage e realtime). NÃO use o Lovable Cloud.
+Crie todas as tabelas, funções e políticas como migrations do Supabase.
 
 Nesta primeira etapa, faça APENAS:
 1. Autenticação com email e senha (telas de login, cadastro e "esqueci minha senha").
@@ -168,7 +191,7 @@ Interface:
   expansível, com "+ Nova página", "+ Subpágina", renomear, mover arrastando, excluir
   (com confirmação) e uma seção "Favoritos".
 - Editor de blocos usando BlockNote: títulos, parágrafos, listas, checklists, citações,
-  blocos de código, tabelas, divisores e imagens (upload para o storage do backend,
+  blocos de código, tabelas, divisores e imagens (upload para o Supabase Storage,
   em um bucket privado acessível só a membros). Menu "/" para inserir blocos.
 - Salvamento automático com debounce (~1s) e indicador "Salvando… / Salvo".
 - Título grande editável e emoji clicável no topo da página.
@@ -208,8 +231,12 @@ Não é prompt — é configuração no Lovable:
 2. **GitHub** → conecte sua conta. O Lovable cria um repositório e sincroniza nos dois
    sentidos (o que for editado lá aparece no Lovable, e vice-versa).
 3. (Opcional) **Domínio próprio** em Settings → Domains.
-4. No painel do backend, confira em Authentication se a confirmação de email está do
-   jeito que você quer e se só os emails permitidos conseguem entrar.
+4. No painel do Supabase, em **Authentication → Users**, confira se só aparecem os
+   emails permitidos. Em **Database → Backups**, veja como funcionam os backups do seu
+   plano. No plano grátis, vale exportar os dados de vez em quando.
+5. (Plano B) Para hospedar na Vercel em vez do Lovable: importe o repositório do GitHub
+   na Vercel e configure as variáveis `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY`
+   (ou os nomes que o projeto usar, conforme o arquivo `.env`). O banco continua o mesmo.
 
 ---
 
